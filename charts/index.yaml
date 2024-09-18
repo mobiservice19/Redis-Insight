@@ -26,6 +26,6 @@ entries:
     - https://github.com/mobiservice19/Redis-Insight
     type: application
     urls:
-    - https://raw.githubusercontent.com/mobiservice19/Redis-Insight/main/charts/charts/redisinsight-0.1.0.tgz
+    - https://raw.githubusercontent.com/mobiservice19/Redis-Insight/main/charts/redisinsight-0.1.0.tgz
     version: 0.1.0
 generated: "2024-09-18T17:08:45.083048+03:00"
