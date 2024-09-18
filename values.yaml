@@ -1,0 +1,204 @@
+# Default values for redisinsight.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Replica count
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+replicaCount: 1
+
+# Container Image Parameters
+# https://kubernetes.io/docs/concepts/containers/images/
+image:
+  repository: redis/redisinsight
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+# Pull an Image from a Private Registry
+# https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+imagePullSecrets: []
+
+# String for overrides release name whose default is the redisinsight.fullname
+nameOverride: "redisinsight"
+fullnameOverride: ""
+
+# Update strategy whose default is the RollingUpdate. 
+# https://kubernetes.io/docs/tutorials/kubernetes-basics/update/update-intro/
+strategyUpdate:
+  maxSurge: 1
+  maxUnavailable: 1
+  type: RollingUpdate
+
+# Service Accounts
+# https://kubernetes.io/docs/concepts/security/service-accounts/
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# Custom pod annotations
+# https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+podAnnotations:
+    prometheus.io/path: /api/health
+    prometheus.io/port: "5540"
+    prometheus.io/scrape: "true"
+
+podLabels: {}
+
+# Configure a Security Context for a Pod or Container
+# https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+podSecurityContext:
+  runAsUser: 1001
+  runAsNonRoot: true
+  runAsGroup: 1001
+  fsGroup: 1001
+
+# Configure a Security Context for a Pod or Container
+# https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# Custom commands and arguments
+containersSpec:
+  command: []
+  args: []
+
+# Add extra environments variables from ConfigMap and Secret
+extraEnv: []
+  # - secretRef:
+  #     name: redisinsight-secret
+  # - configMapRef:
+  #     name: redisinsight-configmap
+
+# Environment variables
+env:
+  - name: TZ
+    value: "Europe/Moscow"
+  - name: RI_APP_PORT
+    value: "5540"
+  - name: RI_APP_HOST
+    value: "0.0.0.0"
+  - name: RI_SERVER_TLS_KEY
+    value: ""
+  - name: RI_SERVER_TLS_CERT
+    value: ""
+  - name: RI_ENCRYPTION_KEY
+    value: ""
+  - name: RI_LOG_LEVEL
+    value: "info"
+  - name: RI_FILES_LOGGER
+    value: "false"
+  - name: RI_STDOUT_LOGGER
+    value: "true"
+
+# Add extra molume mounts
+extraVolumeMounts:
+  - name: redisinsight-data
+    mountPath: /data
+
+# Add extra volume
+extraVolume:
+  - name: redisinsight-data
+    persistentVolumeClaim:
+      # Persistent Volume Claim name whose default is the {{ .Chart.Name }}
+      claimName: "redisinsight-pvc"
+
+# Ports and Protocols
+# https://kubernetes.io/docs/reference/networking/ports-and-protocols/
+ports:
+  - name: http
+    containerPort: 5540
+    protocol: TCP
+
+# Configure Liveness, Readiness and Startup Probes
+# https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+probe:
+  enabled: true
+
+  readinessProbe:
+    tcpSocket:
+      port: http
+    initialDelaySeconds: 5
+    periodSeconds: 10
+
+  livenessProbe:
+    failureThreshold: 5
+    httpGet:
+      path: /
+      port: http
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 10
+    initialDelaySeconds: 60
+
+# Configuration service
+service:
+  type: ClusterIP
+  port: 8080
+
+# Configuration ingress
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+    # nginx.ingress.kubernetes.io/auth-type: basic
+    # nginx.ingress.kubernetes.io/auth-realm: Authentication Required
+    # nginx.ingress.kubernetes.io/auth-secret: redisinsight-basic-auth-secret
+  hosts:
+    - host: redisinsight.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  # If use SSL connection
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+# Resource definition
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# Persistent Volume Claim
+# https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+persistentVolumeClaim:
+  enabled: true
+  name: redisinsight-pvc
+  storageClass: ""
+  accessModes: 
+    - ReadWriteOnce
+  storage: 100Mi
+
+# NodeSelector is the simplest recommended form of node selection constraint. 
+# You can add the nodeSelector field to your Pod specification and specify the node labels you want the target node to have. 
+# Kubernetes only schedules the Pod onto nodes that have each of the labels you specify.
+# https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
+nodeSelector: {}
+
+# Taints and Tolerations
+# https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+tolerations: []
+
+# Affinity and Anti-Affinity
+# https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
+affinity: {}
