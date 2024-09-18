@@ -1,20 +1,54 @@
 # Redis Insight
-
 _Основано на [redisinsight](https://github.com/RedisInsight/RedisInsight)_
 
-### Создадим NAMESPACE для проекта
-```shell
-kubectl create namespace redisinsight
+### HELM CHART FOR USE TO KUBERNETES
+
+### Sources
+* https://github.com/RedisInsight/RedisInsight
+* https://hub.docker.com/r/redis/redisinsight
+* https://github.com/mobiservice19/Redis-Insight
+
+## Install HELM Chart RedisInsight
+
+#### Add repo RedisInsight
+```helm
+helm repo add redisinsight https://raw.githubusercontent.com/mobiservice19/Redis-Insight/main/charts
 ```
 
-### Добавим секрет содержащий логин/пароль для BasicAuth если требуется аутентификация при подключении
-```shell
+#### HELM REPO UPDATE
+```helm
+helm repo update
+```
+#### HELM SEARCH
+```helm
+helm search repo | grep redisinsight
+```
+
+#### Pull default values from HELM Chart redisinsight
+```helm
+helm show values redisinsight/redisinsight > values.yaml
+```
+
+#### Install HELM Chart redisinsight
+```helm
+helm upgrade redisinsight redisinsight/redisinsight \
+    --install \
+    --namespace redisinsight \
+    --create-namespace \
+    --values values.yaml \
+    --wait \
+    --atomic
+```
+
+
+### Add Secret for BasicAuth
+```bash
 kubectl -n redisinsight create secret generic redisinsight-basic-auth-secret \
     --from-literal=auth='<your-basic-auth>'
 ```
 
-### Добавим секрет содержащий параметры подключения к Redis
-```shell
+### Add Secret for connection to Redis (use custom secret to extraEnv)
+```bash
 kubectl -n redisinsight create secret generic redisinsight-secret \
     --from-literal=RI_APP_PORT='<your-RI_APP_PORT>' \
     --from-literal=RI_APP_HOST='<your-RI_APP_HOST>' \
@@ -27,7 +61,7 @@ kubectl -n redisinsight create secret generic redisinsight-secret \
     --from-literal=RI_PROXY_PATH='<your-RI_PROXY_PATH>'
 ```
 
-## Configuration
+## Configuration Redis Insight Environment
 
 The following environment variables can be set to configure Redis Insight:
 You can configure Redis Insight with the following environment variables.
@@ -43,8 +77,3 @@ You can configure Redis Insight with the following environment variables.
 | RI_FILES_LOGGER | Log to file | true |By default, you can find log files in the following folders: /data/logs |
 | RI_STDOUT_LOGGER| Log to STDOUT | true | |
 | RI_PROXY_PATH | Configures a subpath for a proxy | n/a | |
-
-### Установка
-```shell
-helm upgrade --install redisinsight ./ -n redisinsight -f /path/to/you/values --wait --atomic
-```
