@@ -54,10 +54,10 @@ podLabels: {}
 # Configure a Security Context for a Pod or Container
 # https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 podSecurityContext:
-  runAsUser: 1001
+  runAsUser: 1000
   runAsNonRoot: true
-  runAsGroup: 1001
-  fsGroup: 1001
+  runAsGroup: 1000
+  fsGroup: 1000
 
 # Configure a Security Context for a Pod or Container
 # https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
