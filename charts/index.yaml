@@ -3,7 +3,34 @@ entries:
   redisinsight:
   - apiVersion: v2
     appVersion: 2.56.0
-    created: "2024-09-18T17:08:45.083805+03:00"
+    created: "2024-09-19T10:45:08.096752+03:00"
+    description: Redis Insight - Developer GUI for Redis, by Redis. Redis Insight
+      is a visual tool that provides capabilities to design, develop, and optimize
+      your Redis application. Query, analyse and interact with your Redis data.
+    digest: bf779c74b80b7fe84141c57497ed087949800de1b7ce943aa23a2dad9f7d4ecf
+    home: https://github.com/RedisInsight/RedisInsight
+    icon: https://github.com/RedisInsight/RedisInsight/raw/main/resources/icon.png
+    keywords:
+    - Redis
+    - Redis Insight
+    - webUI
+    kubeVersion: '>= 1.16.0-0'
+    maintainers:
+    - email: mobiservice19@gmail.com
+      name: mobiservice19
+      url: https://github.com/mobiservice19
+    name: redisinsight
+    sources:
+    - https://github.com/RedisInsight/RedisInsight
+    - https://hub.docker.com/r/redis/redisinsight
+    - https://github.com/mobiservice19/Redis-Insight
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/mobiservice19/Redis-Insight/main/redisinsight-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 2.56.0
+    created: "2024-09-19T10:45:08.096151+03:00"
     description: Redis Insight - Developer GUI for Redis, by Redis. Redis Insight
       is a visual tool that provides capabilities to design, develop, and optimize
       your Redis application. Query, analyse and interact with your Redis data.
@@ -26,6 +53,6 @@ entries:
     - https://github.com/mobiservice19/Redis-Insight
     type: application
     urls:
-    - https://raw.githubusercontent.com/mobiservice19/Redis-Insight/main/charts/redisinsight-0.1.0.tgz
+    - https://raw.githubusercontent.com/mobiservice19/Redis-Insight/main/redisinsight-0.1.0.tgz
     version: 0.1.0
-generated: "2024-09-18T17:08:45.083048+03:00"
+generated: "2024-09-19T10:45:08.09541+03:00"

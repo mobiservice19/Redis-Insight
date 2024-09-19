@@ -20,7 +20,7 @@ keywords:
 - webUI
 
 kubeVersion: '>= 1.16.0-0'
-version: 0.1.0
+version: 0.1.1
 appVersion: 2.56.0
 
 sources:
